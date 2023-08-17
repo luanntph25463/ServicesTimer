@@ -19,6 +19,7 @@ import android.os.Looper
 import android.os.Message
 import android.os.Process.THREAD_PRIORITY_BACKGROUND
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -36,7 +37,7 @@ class TimerService : Service() {
 
         private var serviceLooper: Looper? = null
         private var serviceHandler: serviceHandler? = null
-
+        private  var ischeck = ""
     }
 
     private val binder: IBinder = CountingBinder()
@@ -47,15 +48,26 @@ class TimerService : Service() {
             // For our sample, we just sleep for 5 seconds.
             // Increase the count
             count++
+            if(ischeck == "foreground"){
+                updateNotification(count)
+                if(count >=100){
+                    stopSelf(msg.arg1)
+                }else{
+                    sendEmptyMessageDelayed(0, 1000)
+                }
+            }
+            if(ischeck == "Back_ground"){
+                if(count == 5){
+
+                    updateNotification(count)
+                    Toast.makeText(applicationContext, "Complete Count = $count", Toast.LENGTH_SHORT).show()
+                    stopSelf(msg.arg1)
+                }else{
+                    sendEmptyMessageDelayed(0, 1000)
+                }
+            }
 
             // Update the notification with the new count
-            updateNotification(count)
-            if (count >= 100) {
-                stopSelf(msg.arg1)
-            } else {
-                // Schedule the next count after a delay of 1 second
-                sendEmptyMessageDelayed(0, 1000)
-            }
 
             // Stop the service using the startId, so that we don't stop
             // the service in the middle of handling another job
@@ -123,6 +135,10 @@ class TimerService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
+        ischeck = intent?.getStringExtra("dataKey").toString()
+        if (ischeck != null) {
+            Log.d(TAG, ischeck)
+        }
         serviceHandler?.obtainMessage()?.also { msg ->
             msg.arg1 = startId
             serviceHandler?.sendMessage(msg)

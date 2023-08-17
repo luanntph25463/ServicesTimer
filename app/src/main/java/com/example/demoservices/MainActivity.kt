@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import kotlinx.android.synthetic.main.activity_main.background
 import kotlinx.android.synthetic.main.activity_main.btnStart
 import kotlinx.android.synthetic.main.activity_main.btnStop
 import kotlinx.android.synthetic.main.activity_main.forgeground
@@ -31,8 +32,16 @@ class MainActivity : AppCompatActivity() {
 
 
         forgeground.setOnClickListener{
-            val serviceIntent = Intent(this, TimerService::class.java)
-            startService( serviceIntent)
+            val intent = Intent(this, TimerService::class.java)
+            intent.putExtra("dataKey", "foreground")
+            startService(intent)
+        }
+
+        background.setOnClickListener{
+            val intent = Intent(this, TimerService::class.java)
+            intent.putExtra("dataKey", "Back_ground")
+            startService(intent)
+
         }
 
 
