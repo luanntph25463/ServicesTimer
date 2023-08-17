@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/images"
+
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
@@ -26,55 +28,48 @@
         android:id="@+id/tvElapsedTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_below="@id/btnStop"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:text="Elapsed Time: 00:00:00"
+        android:textColor="@color/white"
         android:textSize="18sp" />
 
-    <TextView
+    <Button
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="43dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/btnStart"
-        android:layout_alignStart="@+id/btnStart"
-        android:layout_alignTop="@+id/btnStart"
-        android:layout_alignEnd="@+id/btnStart"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="-158dp"
-        android:layout_marginEnd="-130dp"
-        android:layout_marginBottom="115dp"
         android:text="Use bound service"
+        android:textColor="@color/white"
+
         android:textSize="20dp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="214dp"
+    <Button
+        android:id="@+id/forgeground"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView"
         android:layout_alignTop="@+id/textView"
-        android:layout_alignEnd="@+id/textView"
         android:layout_alignBottom="@+id/textView"
-        android:layout_marginStart="-7dp"
         android:layout_marginTop="-50dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="37dp"
+        android:layout_marginBottom="51dp"
+
         android:text="Use foreground service"
+        android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="normal|bold" />
 
-    <TextView
+    <Button
         android:id="@+id/textView8"
-        android:layout_width="246dp"
-        android:layout_height="14dp"
-        android:layout_above="@+id/textView4"
-        android:layout_alignStart="@+id/textView4"
-        android:layout_alignTop="@+id/textView4"
-        android:layout_alignEnd="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/forgeground"
         android:layout_marginStart="0dp"
+        android:textColor="@color/white"
+
         android:layout_marginTop="-64dp"
-        android:layout_marginEnd="-33dp"
         android:layout_marginBottom="49dp"
         android:text="Use background service"
         android:textSize="20dp"
