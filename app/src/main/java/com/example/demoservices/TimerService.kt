@@ -34,10 +34,9 @@ class TimerService : Service() {
         private var count: Int = 0
         private var timer: Timer? = null
         private lateinit var handler: Handler
-
         private var serviceLooper: Looper? = null
         private var serviceHandler: serviceHandler? = null
-        private  var ischeck = ""
+        private var ischeck = ""
     }
 
     private val binder: IBinder = CountingBinder()
@@ -48,21 +47,26 @@ class TimerService : Service() {
             // For our sample, we just sleep for 5 seconds.
             // Increase the count
             count++
-            if(ischeck == "foreground"){
+
+            if (ischeck == "foreground") {
                 updateNotification(count)
-                if(count >=100){
+                if (count >= 100) {
                     stopSelf(msg.arg1)
-                }else{
+                } else {
                     sendEmptyMessageDelayed(0, 1000)
                 }
             }
-            if(ischeck == "Back_ground"){
-                if(count == 5){
+            if (ischeck == "Back_ground") {
+                if (count == 5) {
 
                     updateNotification(count)
-                    Toast.makeText(applicationContext, "Complete Count = $count", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Complete Count = $count",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     stopSelf(msg.arg1)
-                }else{
+                } else {
                     sendEmptyMessageDelayed(0, 1000)
                 }
             }
@@ -73,6 +77,7 @@ class TimerService : Service() {
             // the service in the middle of handling another job
         }
     }
+
     inner class CountingBinder : Binder() {
         fun getService(): TimerService = this@TimerService
     }
@@ -121,7 +126,7 @@ class TimerService : Service() {
         // separate thread because the service normally runs in the process's
         // main thread, which we don't want to block. We also make it
         // background priority so CPU-intensive work will not disrupt our UI.
-        HandlerThread("ServiceStartArguments",THREAD_PRIORITY_BACKGROUND).apply {
+        HandlerThread("ServiceStartArguments", THREAD_PRIORITY_BACKGROUND).apply {
             start()
 
             // Get the HandlerThread's Looper and use it for our Handler
@@ -129,6 +134,11 @@ class TimerService : Service() {
             serviceHandler = serviceHandler(looper)
         }
         Log.d(TAG, "ForegroundService onCreate")
+
+        val overlayIntent = Intent(applicationContext, OverlayService::class.java)
+        startService(overlayIntent)
+        Log.d(TAG, "11 onCreate")
+
     }
 
 
@@ -146,6 +156,7 @@ class TimerService : Service() {
         // If we get killed, after returning from here, restart
         return START_STICKY
     }
+
     private fun updateNotification(count: Int) {
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Hello Service")
@@ -171,6 +182,7 @@ class TimerService : Service() {
     }
 
     private fun createNotificationChannel() {
+        // create notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CHANNEL_ID,

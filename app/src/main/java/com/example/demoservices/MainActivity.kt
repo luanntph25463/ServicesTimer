@@ -31,14 +31,14 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        forgeground.setOnClickListener{
+        forgeground.setOnClickListener {
             forgeground.setBackgroundResource(R.drawable.button3)
             val intent = Intent(this, TimerService::class.java)
             intent.putExtra("dataKey", "foreground")
             startService(intent)
         }
 
-        background.setOnClickListener{
+        background.setOnClickListener {
             background.setBackgroundResource(R.drawable.button4)
 
             val intent = Intent(this, TimerService::class.java)
@@ -80,12 +80,12 @@ class MainActivity : AppCompatActivity() {
             Log.d("this", "$isBound")
 
         }
+
         // ghi đè ServiceConnection  disconnected
         override fun onServiceDisconnected(name: ComponentName?) {
             isBound = false
         }
     }
-
 
 
     override fun onStart() {

@@ -2,10 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/images"
-
     android:layout_height="match_parent"
+
+    android:background="@drawable/images"
     tools:context=".MainActivity">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,11 +32,11 @@
 
             <TextView
                 android:id="@+id/textView"
-                android:padding="10dp"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
                 android:layout_height="match_parent"
+                android:layout_gravity="center"
                 android:background="@drawable/button"
+                android:padding="10dp"
                 android:text="bound service"
                 android:textColor="@color/white"
                 android:textSize="24dp"
@@ -73,40 +74,39 @@
 
     </LinearLayout>
 
-
-
-    <LinearLayout android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="300dp"
         android:gravity="center"
-        android:orientation="vertical"
-        android:layout_width="match_parent">
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <TextView
                 android:id="@+id/btnStart"
                 android:layout_width="172dp"
-                android:gravity="center"
-                android:textSize="24dp"
-                android:textColor="@color/white"
                 android:layout_height="64dp"
                 android:background="@drawable/button2"
-                android:text="Start" />
+                android:gravity="center"
+                android:text="Start"
+                android:textColor="@color/white"
+                android:textSize="24dp" />
 
             <TextView
                 android:id="@+id/btnStop"
                 android:layout_width="154dp"
                 android:layout_height="match_parent"
-                android:textColor="@color/white"
                 android:layout_marginLeft="50dp"
                 android:background="@drawable/button2"
                 android:gravity="center"
                 android:text="Stop"
+                android:textColor="@color/white"
                 android:textSize="24dp" />
         </LinearLayout>
-
 
 
         <TextView
@@ -114,8 +114,8 @@
             android:layout_width="223dp"
             android:layout_height="69dp"
             android:layout_marginTop="30dp"
-            android:gravity="center"
             android:background="@drawable/test"
+            android:gravity="center"
             android:text="Elapsed Time: 00:00:00"
             android:textColor="@color/white"
             android:textSize="18sp" />
