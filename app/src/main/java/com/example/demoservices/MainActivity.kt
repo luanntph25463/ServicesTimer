@@ -32,12 +32,15 @@ class MainActivity : AppCompatActivity() {
 
 
         forgeground.setOnClickListener{
+            forgeground.setBackgroundResource(R.drawable.button3)
             val intent = Intent(this, TimerService::class.java)
             intent.putExtra("dataKey", "foreground")
             startService(intent)
         }
 
         background.setOnClickListener{
+            background.setBackgroundResource(R.drawable.button4)
+
             val intent = Intent(this, TimerService::class.java)
             intent.putExtra("dataKey", "Back_ground")
             startService(intent)
