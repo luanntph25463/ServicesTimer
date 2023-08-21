@@ -23,7 +23,11 @@ import kotlinx.android.synthetic.main.activity_main.forgeground
 class MainActivity : AppCompatActivity() {
     private lateinit var countTextView: TextView
     private lateinit var timerService: TimerService
+    private  val TAG = "MainActivity"
+
     private var isBound = false
+    private var foregournd = "foreground"
+    private var Back_ground = "Back_ground"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         forgeground.setOnClickListener {
             forgeground.setBackgroundResource(R.drawable.button3)
             val intent = Intent(this, TimerService::class.java)
-            intent.putExtra("dataKey", "foreground")
+            intent.putExtra("dataKey", foregournd)
             startService(intent)
         }
 
@@ -42,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             background.setBackgroundResource(R.drawable.button4)
 
             val intent = Intent(this, TimerService::class.java)
-            intent.putExtra("dataKey", "Back_ground")
+            intent.putExtra("dataKey", Back_ground)
             startService(intent)
 
         }
@@ -77,7 +81,8 @@ class MainActivity : AppCompatActivity() {
             timerService = binder.getService()
 
             isBound = true
-            Log.d("this", "$isBound")
+            Log.d(TAG, "$isBound")
+            Log.d(TAG, "$timerService")
 
         }
 
@@ -94,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         // bind auto_create connect if not create
         // khi connect service thanh cong se goi ham onServiceConnected
         bindService(intent, connection, Context.BIND_AUTO_CREATE)
-        Log.d("this", "onconnect")
+        Log.d(TAG, "onconnect")
 
         // kh
         // đăng ký receiver
@@ -107,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         if (isBound) {
             // gọi unbindService của connection
             unbindService(connection)
-            Log.d("this", "onStop")
+            Log.d(TAG, "onStop")
 
             isBound = false
         }
@@ -116,11 +121,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCounting() {
-        Log.d("this", "$isBound")
+        Log.d(TAG, "$isBound")
 
         if (isBound) {
             timerService.startCounting()
-            Log.d("this", "startCounting")
+            Log.d(TAG, "startCounting")
 
         }
     }
@@ -128,7 +133,7 @@ class MainActivity : AppCompatActivity() {
     private fun stopCounting() {
         if (isBound) {
             timerService.stopCounting()
-            Log.d("this", "stopCounting")
+            Log.d(TAG, "stopCounting")
         }
     }
 
