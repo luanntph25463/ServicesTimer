@@ -6,15 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
-import android.os.Build
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import android.view.View
-import android.widget.Button
+
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import com.example.AIDL.NumberCountServiceAIDL
+import com.example.AIDL.NumberCountServiceAIDL.Stub.*
 import kotlinx.android.synthetic.main.activity_main.background
 import kotlinx.android.synthetic.main.activity_main.btnStart
 import kotlinx.android.synthetic.main.activity_main.btnStop
@@ -22,17 +22,19 @@ import kotlinx.android.synthetic.main.activity_main.forgeground
 
 class MainActivity : AppCompatActivity() {
     private lateinit var countTextView: TextView
-    private lateinit var timerService: TimerService
     private  val TAG = "MainActivity"
 
-    private var isBound = false
     private var foregournd = "foreground"
     private var Back_ground = "Back_ground"
+
+
+    //
+    private var timerService: NumberCountServiceAIDL? = null
+    private var isBound = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
 
 
         forgeground.setOnClickListener {
@@ -77,9 +79,10 @@ class MainActivity : AppCompatActivity() {
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as TimerService.CountingBinder
-            timerService = binder.getService()
+//            val binder = service as TimerService.CountingBinder
+//            timerService = binder.getService()
 
+            timerService = asInterface(service)
             isBound = true
             Log.d(TAG, "$isBound")
             Log.d(TAG, "$timerService")
@@ -88,6 +91,7 @@ class MainActivity : AppCompatActivity() {
 
         // ghi đè ServiceConnection  disconnected
         override fun onServiceDisconnected(name: ComponentName?) {
+            timerService = null
             isBound = false
         }
     }
@@ -124,7 +128,7 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "$isBound")
 
         if (isBound) {
-            timerService.startCounting()
+            timerService?.startCounting()
             Log.d(TAG, "startCounting")
 
         }
@@ -132,8 +136,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun stopCounting() {
         if (isBound) {
-            timerService.stopCounting()
-            Log.d(TAG, "stopCounting")
+            timerService?.stopCounting()
+
         }
     }
 
