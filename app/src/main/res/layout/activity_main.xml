@@ -2,95 +2,124 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/images"
-
     android:layout_height="match_parent"
+
+    android:background="@drawable/images"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Start" />
 
-    <Button
-        android:id="@+id/btnStop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btnStart"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="Stop"
-         />
-
-    <TextView
-        android:id="@+id/tvElapsedTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_below="@id/btnStop"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="Elapsed Time: 00:00:00"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
-
-    <Button
-        android:id="@+id/textView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btnStart"
-        android:text="Use bound service"
-        android:textColor="@color/white"
+        android:orientation="vertical">
 
-        android:textSize="20dp"
-        android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="202dp"
+            android:layout_height="63dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Mode"
+            android:textColor="#CDBB15"
+            android:textSize="30dp"
+            android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/forgeground"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="30dp">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/button"
+                android:padding="10dp"
+                android:text="bound service"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/forgeground"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/button"
+                android:gravity="center"
+                android:text="foreground service"
+                android:textColor="@color/white"
+                android:textSize="24dp"
+                android:textStyle="normal|bold" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/background"
+            android:layout_width="235dp"
+            android:layout_height="59dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="97dp"
+            android:background="@drawable/button"
+            android:gravity="center"
+            android:text="background service"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView"
-        android:layout_alignBottom="@+id/textView"
-        android:layout_marginTop="-50dp"
-        android:layout_marginBottom="51dp"
-
-        android:text="Use foreground service"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        android:textStyle="normal|bold" />
-
-    <Button
-        android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/forgeground"
-        android:layout_marginStart="0dp"
-        android:textColor="@color/white"
-
-        android:layout_marginTop="-64dp"
-        android:layout_marginBottom="49dp"
-        android:text="Use background service"
-        android:textSize="20dp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="202dp"
-        android:layout_height="63dp"
-        android:layout_alignStart="@+id/background"
-        android:layout_alignTop="@+id/background"
-        android:layout_alignEnd="@+id/background"
-        android:layout_alignBottom="@+id/background"
-        android:layout_marginStart="99dp"
-        android:layout_marginTop="-72dp"
-        android:layout_marginEnd="110dp"
-        android:layout_marginBottom="57dp"
+        android:layout_marginTop="300dp"
         android:gravity="center"
-        android:text="Mode"
-        android:textColor="#CDBB15"
-        android:textSize="30dp"
-        android:textStyle="bold" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/btnStart"
+                android:layout_width="172dp"
+                android:layout_height="64dp"
+                android:background="@drawable/button2"
+                android:gravity="center"
+                android:text="Start"
+                android:textColor="@color/white"
+                android:textSize="24dp" />
+
+            <TextView
+                android:id="@+id/btnStop"
+                android:layout_width="154dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="50dp"
+                android:background="@drawable/button2"
+                android:gravity="center"
+                android:text="Stop"
+                android:textColor="@color/white"
+                android:textSize="24dp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvElapsedTime"
+            android:layout_width="223dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/test"
+            android:gravity="center"
+            android:text="Elapsed Time: 00:00:00"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
 
 </RelativeLayout>

@@ -25,6 +25,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import java.util.Timer
 import kotlin.concurrent.schedule
+import com.example.AIDL.NumberCountServiceAIDL
 
 class TimerService : Service() {
     companion object {
@@ -32,15 +33,21 @@ class TimerService : Service() {
         private const val NOTIFICATION_ID = 1
         private const val CHANNEL_ID = "ForegroundServiceChannel"
         private var count: Int = 0
+        private var checked = true
         private var timer: Timer? = null
         private lateinit var handler: Handler
-
         private var serviceLooper: Looper? = null
         private var serviceHandler: serviceHandler? = null
-        private  var ischeck = ""
+        private var ischeck = ""
+
+
+        // demo AIDL
+
+        private var countingThread: Thread? = null
+        private var isCounting = false
+
     }
 
-    private val binder: IBinder = CountingBinder()
 
     private inner class serviceHandler(looper: Looper) : Handler(looper) {
         override fun handleMessage(msg: Message) {
@@ -48,22 +55,30 @@ class TimerService : Service() {
             // For our sample, we just sleep for 5 seconds.
             // Increase the count
             count++
-            if(ischeck == "foreground"){
-                updateNotification(count)
-                if(count >=100){
-                    stopSelf(msg.arg1)
-                }else{
-                    sendEmptyMessageDelayed(0, 1000)
-                }
-            }
-            if(ischeck == "Back_ground"){
-                if(count == 5){
-
+            if (checked == true) {
+                if (ischeck == "foreground") {
                     updateNotification(count)
-                    Toast.makeText(applicationContext, "Complete Count = $count", Toast.LENGTH_SHORT).show()
-                    stopSelf(msg.arg1)
-                }else{
-                    sendEmptyMessageDelayed(0, 1000)
+                    if (count >= 100) {
+                        checked = false
+                        stopSelf(msg.arg1)
+                    } else {
+                        sendEmptyMessageDelayed(0, 1000)
+                        Log.d(TAG, "$count")
+                    }
+                }
+                if (ischeck == "Back_ground") {
+                    if (count == 100) {
+
+                        updateNotification(count)
+                        Toast.makeText(
+                            applicationContext, "Complete Count = $count", Toast.LENGTH_SHORT
+                        ).show()
+                        stopSelf(msg.arg1)
+                    } else {
+                        sendEmptyMessageDelayed(0, 1000)
+                        Log.d(TAG, "$count")
+
+                    }
                 }
             }
 
@@ -73,31 +88,45 @@ class TimerService : Service() {
             // the service in the middle of handling another job
         }
     }
-    inner class CountingBinder : Binder() {
-        fun getService(): TimerService = this@TimerService
-    }
+
 
     override fun onBind(intent: Intent): IBinder {
         return binder
     }
 
-    fun startCounting() {
-        timer = Timer()
-        // đặt lịch lặp lại 1s
-        timer?.schedule(0, 1000) {
-            count++
-            // gửi  count
-            sendCountBroadcast(count)
+    private val binder = object : NumberCountServiceAIDL.Stub() {
+        override fun startCounting() {
+            countingThread = Thread {
+                isCounting = true
+                timer = Timer()
+                // đặt lịch lặp lại 1s
+                timer?.schedule(0, 1000) {
+                    count++
+                    // gửi  count
+                    sendCountBroadcast(count)
 
-            if (count >= 100) {
-                timer?.cancel()
+                    if (count >= 100) {
+                        timer?.cancel()
+                    }
+                }
             }
+            countingThread?.start()
+        }
+
+        override fun stopCounting() {
+            timer?.cancel()
+        stopForeground(false)
+        // use removeMessages to remove messages
+        serviceHandler?.removeMessages(0)
+//        Log.d(TAG, "stopCounting")
+        stopSelf()
+            isCounting = false
+            countingThread?.join()
+            countingThread = null
+            Log.d(TAG, "stopCounting")
         }
     }
 
-    fun stopCounting() {
-        timer?.cancel()
-    }
 
     private fun sendCountBroadcast(count: Int) {
         val intent = Intent("COUNT_UPDATE")
@@ -106,9 +135,10 @@ class TimerService : Service() {
     }
 
     override fun onDestroy() {
+
         super.onDestroy()
-        timer?.cancel()
-        stopForeground(true)
+        isCounting = false
+        countingThread?.interrupt()
 
     }
 
@@ -117,18 +147,14 @@ class TimerService : Service() {
         super.onCreate()
         createNotificationChannel()
 
-        // Start up the thread running the service. Note that we create a
-        // separate thread because the service normally runs in the process's
-        // main thread, which we don't want to block. We also make it
-        // background priority so CPU-intensive work will not disrupt our UI.
-        HandlerThread("ServiceStartArguments",THREAD_PRIORITY_BACKGROUND).apply {
+
+        HandlerThread("ServiceStartArguments", THREAD_PRIORITY_BACKGROUND).apply {
             start()
 
             // Get the HandlerThread's Looper and use it for our Handler
             serviceLooper = looper
             serviceHandler = serviceHandler(looper)
         }
-        Log.d(TAG, "ForegroundService onCreate")
     }
 
 
@@ -143,39 +169,34 @@ class TimerService : Service() {
             msg.arg1 = startId
             serviceHandler?.sendMessage(msg)
         }
-        // If we get killed, after returning from here, restart
+//        // If we get killed, after returning from here, restart
         return START_STICKY
     }
+
     private fun updateNotification(count: Int) {
-        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Hello Service")
-            .setContentText("Count: $count")
-            .setSmallIcon(R.drawable.baseline_circle_notifications_24)
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            applicationContext, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val notificationBuilder =
+            NotificationCompat.Builder(this, CHANNEL_ID).setContentTitle("Hello Service")
+                .setContentText("Count: $count").setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.baseline_circle_notifications_24)
 
         val notificationManager = NotificationManagerCompat.from(this)
         if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
+                this, Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
         }
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 
     private fun createNotificationChannel() {
+        // create notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Hello Service Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
+                CHANNEL_ID, "Hello Service Channel", NotificationManager.IMPORTANCE_DEFAULT
             )
 
             val notificationManager =
@@ -183,5 +204,35 @@ class TimerService : Service() {
             notificationManager.createNotificationChannel(channel)
         }
     }
+//
+//    private val binder: IBinder = CountingBinder()
+//
+//    inner class CountingBinder : Binder() {
+//        fun getService(): TimerService = this@TimerService
+//    }
+
+//    fun startCounting() {
+//        timer = Timer()
+//        // đặt lịch lặp lại 1s
+//        timer?.schedule(0, 1000) {
+//            count++
+//            // gửi  count
+//            sendCountBroadcast(count)
+//
+//            if (count >= 100) {
+//                timer?.cancel()
+//            }
+//        }
+//    }
+
+//    fun stopCounting() {
+//        timer?.cancel()
+//        // stop foreground
+//        stopForeground(false)
+//        // use removeMessages to remove messages
+//        serviceHandler?.removeMessages(0)
+//        Log.d(TAG, "stopCounting")
+//        stopSelf()
+//    }
 
 }
